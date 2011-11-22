@@ -39,7 +39,7 @@
 
 //ADC
 #define CONFIG_ENABLE_DRIVER_ADC                        1
-//#define CONFIG_ADC_ENABLE_BURST_MODE                    1
+#define CONFIG_ADC_ENABLE_BURST_MODE                    1
 
 
  /* DRIVER_CONFIG_H_ */
