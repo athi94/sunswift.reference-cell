@@ -71,9 +71,10 @@ void setup(void) {
     ADC_Init(2);
     ADC_EnableChannel(ADC_VOL);
     ADC_EnableChannel(ADC_CUR);
+    ADC_EnableChannel(ADC_REG);
 
-    ADC_Read(ADC_VOL);
     ADC_Read(ADC_CUR);
+    ADC_Read(ADC_REG);
 
 #endif // lpc1768 || lpc11c14
 } // setup
@@ -114,28 +115,37 @@ int main(void) {
     GPIO_SetValue(YELLOW_LED_PORT,YELLOW_LED_BIT,0);
     GPIO_SetValue(RED_LED_PORT, RED_LED_BIT,0);
     oldTime=sc_get_timer();
-    for(i=0; i<300000; i++){
+    for(i=0; i<2; i++){
         ADC_Read(ADC_VOL);
         ADC_Read(ADC_CUR);
         p_new=ADCValue[ADC_VOL]*ADCValue[ADC_CUR];
         //UART_printf("%d, %d", i, ADCValue[ADC_VOL]);
     }
     time=sc_get_timer()-oldTime;
-        GPIO_SetValue(YELLOW_LED_PORT,YELLOW_LED_BIT,1);
-        GPIO_SetValue(RED_LED_PORT, RED_LED_BIT,1);
+        GPIO_SetValue(YELLOW_LED_PORT,YELLOW_LED_BIT,0);
+        GPIO_SetValue(RED_LED_PORT, RED_LED_BIT,0);
+        
+        int average_current=0;
+        int average_counter=0;
 	/* This is the main loop, go for ever! */
 	while (1) {
 		/* This checks whether there are pending requests from CAN, and sends a heartbeat message.
 		 * The heartbeat message encodes some data in the first 4 bytes of the CAN message, such as
 		 * the number of errors and the version of scandal */
 		handle_scandal();
-        
-        GPIO_SetValue(YELLOW_LED_PORT,YELLOW_LED_BIT,1);
-        GPIO_SetValue(RED_LED_PORT, RED_LED_BIT,1);
-
+        //ADC_BurstRead;
         ADC_Read(ADC_VOL);
-        scandal_delay(1);
-        UART_printf("BLARGH %u %d\n\r", time, sc_get_timer());
+        scandal_naive_delay(5);
+        ADC_Read(ADC_CUR);
+        scandal_naive_delay(5);
+        //scandal_delay(1);
+        ADC_Read(ADC_REG);
+        scandal_naive_delay(5);
+        //average_current += ;
+        UART_printf("ADC: %d, %d, %d\n\r", ADCValue[ADC_CUR], ADCValue[ADC_VOL], (SystemCoreClock/((LPC_SYSCON->SYSAHBCLKDIV)*ADC_MAXCLK)));
+
+       
+   
 
 	}
 }

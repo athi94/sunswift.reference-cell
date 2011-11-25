@@ -9,7 +9,7 @@ CHECKSUM = checksum
 
 # architecture
 MCU = cortex-m0
-UC = LPC11C14/301
+UC = LPC11C24/301
 
 # define utilities
 CC = arm-none-eabi-gcc
@@ -22,7 +22,7 @@ LINKSCRIPT=lpc1114_flash_can_crp.ld
 STARTUPSCRIPT = cr_startup_lpc11
 
 OBJECTS += core_cm0.o system_LPC11xx.o
-OBJECTS += i2c.o ssp.o
+OBJECTS += i2c.o ssp.o adc.o
 OBJECTS += $(STARTUPSCRIPT).o
 
 CFLAGS += -mcpu=$(MCU) -D__NEWLIB__ -D__USE_CMSIS -D__CODE_RED -mthumb
